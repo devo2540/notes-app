@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -7,11 +7,14 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./post-create.component.css']
 })
 export class PostCreateComponent implements OnInit {
-  enteredValue = 'Type your post here';
-  newPost = '';
+  enteredTitle = '';  
+  enteredContent = '';
+  @Output() postCreated = new EventEmitter();
   
   onAddPost() {
-    this.newPost = this.enteredValue;
+    const post = { title: this.enteredTitle, content: this.enteredContent }
+    
+    this.postCreated.emit(post);
   }
 
   constructor() { }
