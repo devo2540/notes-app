@@ -7,8 +7,8 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./post-create.component.css']
 })
 export class PostCreateComponent implements OnInit {
-  enteredValue = '';
-  newPost = 'Type your post here';
+  enteredValue = 'Type your post here';
+  newPost = '';
   
   onAddPost() {
     this.newPost = this.enteredValue;
