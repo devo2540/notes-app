@@ -1,6 +1,10 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 
 const app = express();
+
+app.use(bodyParser.json()); // parse JSON data
+// app.use(bodyParser.urlencoded({extended: false}));
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*'); // no matter what domain app is running on, allowed to access server resources
@@ -9,7 +13,15 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use('/api/posts',(req, res, next) => {
+app.post('/api/posts', (res, req, next) => {
+    const post = req.body;
+    console.log(post);
+    res.statusCode(201).json({
+        message: 'Post added succesfully'
+    });
+});
+
+app.use('/api/posts', (req, res, next) => {
     const posts = [
         {
             id: 'aaa123',
