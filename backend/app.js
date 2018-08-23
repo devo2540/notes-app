@@ -21,7 +21,7 @@ app.use(bodyParser.json()); // parse JSON data
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*'); // no matter what domain app is running on, allowed to access server resources
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept'); // incoming request may have these extra headers
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
     next();
 });
 
@@ -37,6 +37,19 @@ app.post('/api/posts', (req, res, next) => {
             message: 'Post added succesfully',
             postId: createdPost._id
         });
+    });
+});
+
+// save updated post 
+app.put('/api/posts/:id', (req, res, next) => {
+    const post = new Post({
+        _id: req.body.id,
+        title: req.body.title,
+        content: req.body.content
+    });
+    Post.updateOne({ _id: req.params.id }, post).then(result => {
+        console.log(result);
+        res.status(200).json({ message: 'Updated Post Successfully!' });
     });
 });
 

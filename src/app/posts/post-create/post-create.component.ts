@@ -1,5 +1,7 @@
+import { Post } from './../post.model';
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 
 import { PostsService } from '../posts.service';
 
@@ -11,16 +13,36 @@ import { PostsService } from '../posts.service';
 export class PostCreateComponent implements OnInit {
   enteredTitle = '';  
   enteredContent = '';
+  post: Post;
+  private mode = 'create'; // default mode is create post 
+  private postId: string;
   
-  onAddPost(form: NgForm) {
-    if(form.invalid) {return}
-    this.postsService.addPost(form.value.title, form.value.content);
-    form.resetForm();
-  }
 
-  constructor(public postsService: PostsService) { }
+  constructor(public postsService: PostsService, public route: ActivatedRoute) { }
 
   ngOnInit() {
+    this.route.paramMap.subscribe((paramMap: ParamMap) => { // subsribe to URL param map
+      if (paramMap.has('postId')) {
+        this.mode = 'edit';
+        this.postId = paramMap.get('postId'); 
+        this.post = this.postsService.getPost(this.postId);
+      } else {
+        this.mode = 'create';
+        this.postId = null;
+      }
+    });
   }
+  
+  onSavePost(form: NgForm) {
+    if (form.invalid) {
+      return;
+    }
 
+    if (this.mode === 'create') {
+      this.postsService.addPost(form.value.title, form.value.content);
+    } else {
+      this.postsService.updatePost(this.postId, form.value.title, form.value.content);
+    }
+    form.resetForm();
+  }
 }
